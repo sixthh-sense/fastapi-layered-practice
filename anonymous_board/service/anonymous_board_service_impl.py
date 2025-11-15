@@ -45,3 +45,9 @@ class AnonymousBoardServiceImpl(AnonymousBoardService):
 
     def list(self):
         return self.anonymous_board_repository.find_all()
+
+    def read(self, board_id: str):
+        read_board = self.anonymous_board_repository.find_by_id(board_id)
+        if not read_board:
+            raise ValueError("찾는 게시물이 없습니다.")
+        return read_board

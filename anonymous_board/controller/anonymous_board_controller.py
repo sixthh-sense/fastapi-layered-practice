@@ -3,11 +3,13 @@
 # FastAPI의 경우 API Router라는 녀석이 위의 역할을 수행합니다.
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 from anonymous_board.controller.request.create_anonymous_board_request import CreateAnonymousBoardRequest
 from anonymous_board.controller.response.anonymous_board_response import AnonymousBoardResponse
 from anonymous_board.service.anonymous_board_service_impl import AnonymousBoardServiceImpl
+
+from typing import List
 
 # @RequestMapping("/board")
 # Controller, Service, Repository 객체 모두 싱글톤 구성
@@ -53,3 +55,19 @@ def list_anonymous_boards():
             created_at=anonymous_board.created_at.isoformat()
         ) for anonymous_board in boardList
     ]
+
+@anonymous_board_controller.get("/{board_id}",
+    response_model=AnonymousBoardResponse)
+def get_anonymous_board(board_id: str):
+    try:
+        anonymous_board = board_service.read(board_id)
+
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Board not found")
+
+    return AnonymousBoardResponse(
+        id=anonymous_board.id,
+        title=anonymous_board.title,
+        content=anonymous_board.content,
+        created_at=anonymous_board.created_at.isoformat()
+    )

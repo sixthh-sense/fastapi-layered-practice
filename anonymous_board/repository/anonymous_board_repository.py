@@ -11,5 +11,9 @@ class AnonymousBoardRepository(ABC):
         pass
 
     @abstractmethod
-    def list(self) -> List[AnonymousBoard]:
+    def find_all(self) -> List[AnonymousBoard]:
+        pass
+
+    @abstractmethod
+    def find_by_id(self, id:str) -> AnonymousBoard:
         pass
