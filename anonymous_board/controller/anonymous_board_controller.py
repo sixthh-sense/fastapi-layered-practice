@@ -1,6 +1,8 @@
 # Spring Boot / Spring Reactive
 # @RestController / @Controller
 # FastAPI의 경우 API Router라는 녀석이 위의 역할을 수행합니다.
+from typing import List
+
 from fastapi import APIRouter
 
 from anonymous_board.controller.request.create_anonymous_board_request import CreateAnonymousBoardRequest
@@ -38,3 +40,16 @@ def create_anonymous_board(request: CreateAnonymousBoardRequest):
         created_at=createdBoard.created_at
     )
 
+@anonymous_board_controller.get("/list",
+                                response_model=List[AnonymousBoardResponse])
+def list_anonymous_boards():
+    boardList = board_service.list()
+
+    return [
+        AnonymousBoardResponse(
+            id=anonymous_board.id,
+            title=anonymous_board.title,
+            content=anonymous_board.content,
+            created_at=anonymous_board.created_at.isoformat()
+        ) for anonymous_board in boardList
+    ]

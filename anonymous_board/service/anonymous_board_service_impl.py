@@ -43,3 +43,5 @@ class AnonymousBoardServiceImpl(AnonymousBoardService):
     def create(self, title: str, content: str):
         return self.anonymous_board_repository.create(title, content)
 
+    def list(self):
+        return self.anonymous_board_repository.find_all()

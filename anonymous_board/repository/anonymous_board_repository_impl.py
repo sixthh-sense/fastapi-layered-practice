@@ -1,3 +1,5 @@
+from typing import List
+
 from anonymous_board.entity.anonymous_board import AnonymousBoard
 from anonymous_board.repository.anonymous_board_repository import AnonymousBoardRepository
 from config.mysql_config import SessionLocal
@@ -32,6 +34,16 @@ class AnonymousBoardRepositoryImpl(AnonymousBoardRepository):
         except:
             db.rollback()
             raise
+
+        finally:
+            db.close()
+
+    def list(self) -> List[AnonymousBoard]:
+        db = SessionLocal()
+
+        try:
+            return (db.query(AnonymousBoard).
+                    order_by(AnonymousBoard.created_at.desc()).all())
 
         finally:
             db.close()
